@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.9.0"
+    }
+}
+
+
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'io.codearte.nexus-staging'
+
+group = 'dk.nodes'
+version = '0.0.1'
+archivesBaseName = 'gradle-utils'
+
+apply from: 'maven-push.gradle'
+
+nexusStaging {
+    packageGroup = "dk.nodes"
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+    compile 'com.android.tools.build:gradle:2.1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+task installArchives(type: Upload) {
+    description "Installs the artifacts to the local Maven repository"
+    repositories.mavenInstaller {
+        configuration = configurations.default
+        pom.groupId = 'dk.nodes'
+        pom.artifactId = 'gradle-utils'
+        pom.version = '0.0.1-snapshot'
+        pom.packaging = 'jar'
+    }
+}

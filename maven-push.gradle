@@ -1,0 +1,94 @@
+apply plugin: 'signing'
+apply plugin: 'maven'
+
+
+def _name = 'Nodes Gradle utils plugin'
+def _description = 'Nodes Gradle utils plugin to reduce code'
+
+// Username & password for Sonatype, stored in gradle.properties
+def _ossrhUsername = System.getenv('NEXUS_USERNAME')
+def _ossrhPassword = System.getenv('NEXUS_PASSWORD')
+
+allprojects { ext."signing.keyId" = System.getenv('keyId') }
+allprojects { ext."signing.secretKeyRingFile" = System.getenv('secretKeyRingFile') }
+allprojects { ext."signing.password" = System.getenv('password') }
+
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': _name, 'Implementation-Version': version
+    }
+}
+
+task androidJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar, androidJavadocsJar
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: _ossrhUsername, password: _ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: _ossrhUsername, password: _ossrhPassword)
+            }
+
+            pom.project {
+                name _name
+                packaging 'jar'
+                artifactId archivesBaseName
+                description _description
+                url 'https://github.com/nodes-projects/nodes-gradle'
+                inceptionYear '2017'
+
+                scm {
+                    url 'https://github.com/nodes-projects/nodes-gradle'
+                    connection 'scm:https://github.com/nodes-projects/nodes-gradle'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'enra'
+                        name 'Enrique Ramirez'
+                        email 'enra@nodes.dk'
+                    }
+                }
+
+                issueManagement {
+                    system 'GitHub issues'
+                    url 'https://github.com/nodes-projects/nodes-gradle/issues'
+                }
+            }
+        }
+    }
+}
