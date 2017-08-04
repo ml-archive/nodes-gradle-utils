@@ -1,22 +1,25 @@
-# Nodes Gradle Utils Plugin
-Android Gradle Utils plugin generates BuildConfig fields and/or resValues for some predefined keys like `apiUrl`, but you can also create up to 4 custom keys that will generate both BuildConfig fielad nand resValue if define.
+# Nodes Gradle Utils Plugin for Android
+Android Gradle Utils plugin generates BuildConfig, resValues and ManifestPlaceholders for some predefined keys like `apiUrl`, but also gives you the choice of using up to 9 custom keys.
 
-Those keys can be defined in default config as well as product flavours. 
+Those keys can be defined in the `defaultConfig` block as well as in the `prodcutFlavors` block for each flavour. 
 
-## Android Flavor Config
+## Usage
+
+The use is simple, you just type as many of the predefined key as you want and it would generate BuildConfig fiedls, resValues and ManifestPlaceholders for you evaluating each variant. So if a key hasn't been defined, it won't be generated.
 
 
-Simple projects
 ```groovy
 android {
 //...
 
     defaultConfig {
         apiUrl = "http://defaultUrl.com"
-
+        customKey1 = "myCustomKey"
     }
     productFlavors {
         development {
+            customKey1 = "myCustomKeyForDevelopment" 
+            customKey2 = "myOtherCustomKeyForDevelopment"
         }
         staging {
             apiUrl = "http://staging.com"
@@ -28,24 +31,42 @@ android {
 }
 ```
 
-This will generate a public static and final field in the BuildConfig class accessible from everywhere in your app. If the key is missing (not in flavour neither in defaultConfig) it wont be include. The predefined keys are:
+Notes
+____
 
-|     key    |     BuildConfig field name     |         res string key         |                notes               |
-|:----------:|:------------------------------:|:------------------------------:|:----------------------------------:|
-|   apiUrl   |             API_URL            |                *               |    no String resource generated    |
-|  nstackApi |           NSTACK_API           |           nstack_api           | requires nstackKey to be generated |
-|  nstackKey |           NSTACK_KEY           |           nstack_key           | requires nstackApi to be generated |
-| customKeyX | CUSTOM_KEY_X, or specified one | custom_key_x, or specified one |      X is a value from 1 - 4.      |
+**BuildConfig** fields. BuildConfig class is a constants class generated for each build variant accessible from anywhere in your app. We only generate String constants.
+**ResValues** are short for resource values. When you add a String to your string file you are doing the same. We only generate string resource values.
+**ManifestPlaceholders** is a nice way of generating dynamic keys in the manifest. <https://developer.android.com/studio/build/manifest-build-variables.html>
+
+|       key      |    BuildConfig field name   |          ResVal key          |    ManifestPlaceholder key   |                                       notes                                       |
+|:--------------:|:---------------------------:|:----------------------------:|:----------------------------:|:---------------------------------------------------------------------------------:|
+|     apiUrl     |           API_URL           |            api_url           |           ${apiUrl}          |                            no String resource generated                           |
+|    nstackApi   |          NSTACK_API         |          nstack_api          |          ${NSTACK_API}       |                         requires nstackKey to be generated                        |
+|    nstackKey   |          NSTACK_KEY         |          nstack_key          |          ${NSTACK_KEY}       |                         requires nstackApi to be generated                        |
+| customKey**X** | CUSTOM_KEY_**X** or custom* | custom_key_**x** or custom * |${CUSTOM_KEY_**X**}, or custom| **X** has to be a value from 1 - 9.  *You can also specify the a custom field/key |
 
 If you want a specific name to be used for your custom keys, just add the following to your gradle file
 
 ```groovy
 nodesGradle {
     customKey1FieldName = "my custom service key"
+    customKey2FieldName = "google api"
 }
 ```
 
-This will change the name of the field in your BuildConfig class to the one specified for your custom key.
+This will change the name of the field in your BuildConfig class to the one specified for your custom key. It would make it upper case for BuildConfig, lower case for ResValues and in all cases it will replace the spaces for `_`. 
+
+By default BuildConfig fields, string resource and ManifestPlaceholders will be generated, but if you want to opt out for any of those, it can be specified in the nodesGradle block:
+
+```groovy
+nodesGradle {
+    generateBuildConfigFields = false
+    generateManifestPlaceholders = false
+    generateResValues = false
+}
+```
+
+
 
 ## Advanced use
 
@@ -131,7 +152,7 @@ buildscript {
 
 ## Limitations
 
-* It only let you have 4 custom keys. There is no particular reason for this, but we are still trying to figure out the best way for having custom keys with not much hassle from the consumer perspective. 
+* It only let you have 9 custom keys. There is no particular reason for this, but we are still trying to figure out the best way for having custom keys with not much hassle from the consumer perspective. 
 
 * When using dimensions, only the first two dimensions are used on each variant to determine whether or not there is a key that references the other flavour in the other dimensions.
 
