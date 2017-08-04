@@ -6,10 +6,10 @@ import java.util.Map;
  */
 
 class NodesGradleExtension {
-    String customKey1FieldName;
-    String customKey2FieldName;
-    String customKey3FieldName;
-    String customKey4FieldName;
+    String customKey1FieldName = "CUSTOM_KEY_1";
+    String customKey2FieldName = "CUSTOM_KEY_2";
+    String customKey3FieldName = "CUSTOM_KEY_3";
+    String customKey4FieldName = "CUSTOM_KEY_4";
 
     public NodesGradleExtension() {
     }
