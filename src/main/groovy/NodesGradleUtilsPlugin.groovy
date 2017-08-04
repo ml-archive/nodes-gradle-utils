@@ -135,10 +135,10 @@ class NodesGradleUtilsPlugin implements Plugin<Project> {
 
 
         if (variant.productFlavors.size() == 2) {
-            //apps with dimensions like riide
+            //apps with dimensions
             if (variant.productFlavors[0].ext[fieldName] instanceof Map && variant.productFlavors[0].ext[fieldName][variant.productFlavors[1].name] != null) {
                 //When environment keys specified
-                value = variant.productFlavors[0].ext.apiUrl[variant.productFlavors[1].name];
+                value = variant.productFlavors[0].ext[fieldName][variant.productFlavors[1].name];
             } else if (variant.productFlavors[1].ext[fieldName] instanceof Map && variant.productFlavors[1].ext[fieldName][variant.productFlavors[0].name] != null) {
                 //When environment keys specified
                 value = variant.productFlavors[1].ext[fieldName][variant.productFlavors[0].name];
