@@ -7,8 +7,8 @@ import org.gradle.api.Project
 
 class NodesGradleUtilsPlugin implements Plugin<Project> {
     private static final String K_API_URL = "apiUrl";
-    private static final String K_NSTACK_KEY = "nstackKey";
-    private static final String K_NSTACK_API = "nstackApi";
+    private static final String K_NSTACK_API_KEY = "nstackAPIKey";
+    private static final String K_NSTACK_APP_ID = "nstackAppId";
     private static final String K_CUSTOM_K1 = "customKey1";
     private static final String K_CUSTOM_K2 = "customKey2";
     private static final String K_CUSTOM_K3 = "customKey3";
@@ -36,8 +36,8 @@ class NodesGradleUtilsPlugin implements Plugin<Project> {
 
 
         project.android.defaultConfig.ext.set(K_API_URL, null)
-        project.android.defaultConfig.ext.set(K_NSTACK_KEY, null)
-        project.android.defaultConfig.ext.set(K_NSTACK_API, null)
+        project.android.defaultConfig.ext.set(K_NSTACK_API_KEY, null)
+        project.android.defaultConfig.ext.set(K_NSTACK_APP_ID, null)
 
         project.android.defaultConfig.ext.set(K_CUSTOM_K1, null)
         project.android.defaultConfig.ext.set(K_CUSTOM_K2, null)
@@ -53,8 +53,8 @@ class NodesGradleUtilsPlugin implements Plugin<Project> {
         project.android.productFlavors.all {
             flavor ->
                 flavor.ext.set("apiUrl", [:])
-                flavor.ext.set("nstackKey", [:])
-                flavor.ext.set("nstackApi", [:])
+                flavor.ext.set(K_NSTACK_API_KEY, [:])
+                flavor.ext.set(K_NSTACK_APP_ID, [:])
 
                 flavor.ext.set(K_CUSTOM_K1, [:])
                 flavor.ext.set(K_CUSTOM_K2, [:])
@@ -97,23 +97,23 @@ class NodesGradleUtilsPlugin implements Plugin<Project> {
     }
 
     private void generateNstackField(ApplicationVariant variant, ProductFlavor defautlConfig) {
-        String nstackKey = getValueForField(variant, "nstackKey", defautlConfig);
-        String nstackApi = getValueForField(variant, "nstackApi", defautlConfig);
+        String nstackAPIKey = getValueForField(variant, K_NSTACK_API_KEY, defautlConfig);
+        String nstackAppId = getValueForField(variant, K_NSTACK_APP_ID, defautlConfig);
 
-        if (nstackApi != null && nstackKey != null) {
+        if (nstackAppId != null && nstackAPIKey != null) {
             if (genBCFs) {
-                variant.buildConfigField "String", "NSTACK_KEY", "\"" + nstackKey + "\"";
-                variant.buildConfigField "String", "NSTACK_API", "\"" + nstackApi + "\"";
+                variant.buildConfigField "String", "NSTACK_API_KEY", "\"" + nstackAPIKey + "\"";
+                variant.buildConfigField "String", "NSTACK_APP_ID", "\"" + nstackAppId + "\"";
             }
 
             if (genResVals) {
-                variant.resValue "string", "nstack_key", nstackKey;
-                variant.resValue "string", "nstack_api", nstackApi;
+                variant.resValue "string", "nstack_api_key", nstackAPIKey;
+                variant.resValue "string", "nstack_app_id", nstackAppId;
             }
 
             if (genMPs) {
-                variant.getMergedFlavor().getManifestPlaceholders().put("NSTACK_KEY", value);
-                variant.getMergedFlavor().getManifestPlaceholders().put("NSTACK_API", value);
+                variant.getMergedFlavor().getManifestPlaceholders().put("NSTACK_API_KEY", nstackAPIKey);
+                variant.getMergedFlavor().getManifestPlaceholders().put("NSTACK_APP_ID", nstackAppId);
             }
         }
     }

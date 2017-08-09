@@ -41,8 +41,8 @@ ____
 |       key      |    BuildConfig field name   |          ResVal key          |    ManifestPlaceholder key   |                                       notes                                       |
 |:--------------:|:---------------------------:|:----------------------------:|:----------------------------:|:---------------------------------------------------------------------------------:|
 |     apiUrl     |           API_URL           |            api_url           |           ${apiUrl}          |                            no String resource generated                           |
-|    nstackApi   |          NSTACK_API         |          nstack_api          |          ${NSTACK_API}       |                         requires nstackKey to be generated                        |
-|    nstackKey   |          NSTACK_KEY         |          nstack_key          |          ${NSTACK_KEY}       |                         requires nstackApi to be generated                        |
+|   nstackAPIKey |        NSTACK_API_KEY       |         nstack_api_key       |        ${NSTACK_API_KEY}     |                       requires nstackAPIKey to be generated                       |
+|   nstackAppId  |        NSTACK_APP_ID        |         nstack_app_id        |        ${NSTACK_APP_ID}      |                       requires nstackAppId to be generated                        |
 | customKey**X** | CUSTOM_KEY_**X** or custom* | custom_key_**x** or custom * |${CUSTOM_KEY_**X**}, or custom| **X** has to be a value from 1 - 9.  *You can also specify the a custom field/key |
 
 If you want a specific name to be used for your custom keys, just add the following to your gradle file
