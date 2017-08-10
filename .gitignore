@@ -14,3 +14,5 @@ gen/
 build/
 bin/
 out/
+
+local.properties
