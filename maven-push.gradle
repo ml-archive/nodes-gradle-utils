@@ -61,12 +61,12 @@ uploadArchives {
                 packaging 'jar'
                 artifactId archivesBaseName
                 description _description
-                url 'https://github.com/nodes-projects/nodes-gradle'
+                url 'https://github.com/nodes-android/nodes-gradle-utils'
                 inceptionYear '2017'
 
                 scm {
-                    url 'https://github.com/nodes-projects/nodes-gradle'
-                    connection 'scm:https://github.com/nodes-projects/nodes-gradle'
+                    url 'https://github.com/nodes-android/nodes-gradle-utils'
+                    connection 'scm:https://github.com/nodes-android/nodes-gradle-utils'
                 }
 
                 licenses {
@@ -80,13 +80,13 @@ uploadArchives {
                     developer {
                         id 'enra'
                         name 'Enrique Ramirez'
-                        email 'enra@nodes.dk'
+                        email 'enra@nodesagency.com'
                     }
                 }
 
                 issueManagement {
                     system 'GitHub issues'
-                    url 'https://github.com/nodes-projects/nodes-gradle/issues'
+                    url 'https://github.com/nodes-android/nodes-gradle-utils/issues'
                 }
             }
         }
