@@ -1,7 +1,3 @@
-import java.util.HashMap;
-import java.util.Map;
-
-
 class NodesGradleExtension {
     String customKey1FieldName = "CUSTOM_KEY_1";
     String customKey2FieldName = "CUSTOM_KEY_2";

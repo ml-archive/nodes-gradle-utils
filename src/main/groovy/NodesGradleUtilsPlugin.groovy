@@ -34,6 +34,11 @@ class NodesGradleUtilsPlugin implements Plugin<Project> {
 
         project.extensions.create("nodesGradle", NodesGradleExtension)
 
+        project.task('hello') {
+            doLast {
+                println "hello"
+            }
+        }
 
         project.android.defaultConfig.ext.set(K_API_URL, null)
         project.android.defaultConfig.ext.set(K_NSTACK_API_KEY, null)
